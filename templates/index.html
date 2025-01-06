@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login dan Prediksi Gambar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js"></script>
+</head>
+<body>
+    <!-- Tombol Login -->
+    <button class="login-btn" id="google-login-btn">
+        <img src="https://logowik.com/content/uploads/images/google-g-icon6721.logowik.com.webp" alt="Google Logo">
+        Login dengan Google
+    </button>
+
+    <!-- Form Upload Gambar (disembunyikan hingga login berhasil) -->
+    <form method="POST" enctype="multipart/form-data" id="upload-form" style="display: none;">
+        <label for="file">Unggah Gambar:</label>
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Prediksi</button>
+    </form>
+
+    <script type="module">
+        // Import Firebase dan Konfigurasi
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-D0ouE7-gE5iZD7A-YJZ6MHO8vBUqGvg",
+            authDomain: "jinam-e58e7.firebaseapp.com",
+            projectId: "jinam-e58e7",
+            storageBucket: "jinam-e58e7.appspot.com",
+            messagingSenderId: "665019559247",
+            appId: "1:665019559247:web:539227133d351d4e75a93a"
+        };
+
+        // Inisialisasi Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Login dengan Google
+        document.getElementById('google-login-btn').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+
+                // Tampilkan pesan berhasil login
+                alert(`Login berhasil! Selamat datang, ${user.displayName}`);
+
+                // Sembunyikan tombol login dan tampilkan form unggah gambar
+                document.getElementById('google-login-btn').style.display = 'none';
+                document.getElementById('upload-form').style.display = 'block';
+            } catch (error) {
+                console.error('Error during login:', error.message);
+                alert('Login gagal, coba lagi.');
+            }
+        });
+    </script>
+</body>
+</html>
